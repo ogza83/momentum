@@ -1,15 +1,12 @@
 import os
-from dotenv import load_dotenv
 from openai import OpenAI
 import streamlit as st
 import openai
 
-# Load environment variables from .env file
-load_dotenv()
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+api_key = st.secrets["openai"]["api_key"]
 # Initialize the OpenAI client
-client = openai.OpenAI(api_key=OPENAI_API_KEY)
+client = openai.OpenAI(api_key=api_key)
 flask_url = "http://127.0.0.1:5000"
 
 with st.sidebar:
@@ -57,7 +54,7 @@ examples = [
     {"role": "user", "content": "Write a few short and engaging social media posts to promote my webinar."},
     {"role": "assistant", "content": "Sure! Here are a few options: 1.  🤔 Strugglingggling with [problem the webinar addresses]? Join our FREE webinar to learn [key benefit].  Register now! [Link]  2.  Level up your [relevant skill]!  Our expert-led webinar will teach you how to [key benefits].  Spots are limited - sign up today! [Link]"},
     {"role": "user", "content": "What are good email open rates and click-through rates?"},
-     {"role": "assistant", "content": "Average open rates are 17-28% (but less reliable nowadays). Aim for 2-3% click-through rate. Industry, subject line, and content quality greatly impact these metrics."}, 
+    {"role": "assistant", "content": "Average open rates are 17-28% (but less reliable nowadays). Aim for 2-3% click-through rate. Industry, subject line, and content quality greatly impact these metrics."}, 
 ]
 
 instructions = """
@@ -68,7 +65,7 @@ for msg in st.session_state.messages:
     st.chat_message(msg["role"]).write(msg["content"])
 
 if prompt := st.chat_input():
-    if not OPENAI_API_KEY:
+    if not api_key:
         st.info("Please add your OpenAI API key to continue.")
         st.stop()
 
