@@ -44,8 +44,10 @@ def generate_response(prompt, examples, instructions):
         response = client.chat.completions.create(model="gpt-3.5-turbo", messages=messages)
         msg = response.choices[0].message.content
         return msg
-    except openai.error.InvalidRequestError as e:  # Handle potential errors
+    except openai.error.OpenAIError as e:  # Handle potential errors
         return f"Error: {e}. Please refine your examples or try a different prompt."
+    except Exception as e:
+        return f"An enexpected error occured: {e}"
 
 # Example usage
 examples = [
